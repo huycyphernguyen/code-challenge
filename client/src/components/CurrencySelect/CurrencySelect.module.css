@@ -1,0 +1,50 @@
+.currencyButton {
+  background-color: rgb(19, 19, 19);
+  border: 1px solid rgb(57, 57, 57);
+  border-radius: 99999px;
+  cursor: pointer;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.currencyButton:focus {
+  border: 1px solid rgb(57, 57, 57);
+  outline: 0;
+}
+
+.currencyButton:hover {
+  background-color: rgb(26, 26, 26);
+}
+
+.currencySelectWrapper [data-radix-select-viewport] {
+  background-color: rgb(19, 19, 19);
+  border-radius: 16px;
+  border: 1px solid rgb(57, 57, 57);
+  margin-top: 2px;
+  width: max-content;
+}
+
+.currencySelectWrapper [data-radix-collection-item]:hover {
+  background-color: rgb(40, 40, 40);
+
+}
+
+.currencySelectWrapper [data-radix-collection-item] {
+  padding: 8px;
+  border-radius: 16px;
+  user-select: none;
+}
+
+.currencySelectWrapper [data-radix-collection-item] div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.currencySelectWrapper [data-radix-collection-item] {
+  outline: none !important;
+  border-color: transparent !important;
+}
