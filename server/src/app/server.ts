@@ -1,0 +1,71 @@
+import http from "node:http";
+import { AddressInfo } from "node:net";
+import express, { Express } from "express";
+import { config } from "./config/config";
+import { healthRouter } from "./health/api/health-router";
+import { ConsoleLogger } from "../contexts/shared/logger/console-logger";
+import { Logger } from "../contexts/shared/logger/logger";
+import { createUserRouter } from "../contexts/users/api/user-router";
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "../app/swagger";
+
+export class Server {
+  private readonly app: Express;
+  private httpServer?: http.Server;
+  private readonly logger: Logger;
+
+  constructor() {
+    this.logger = new ConsoleLogger();
+    this.app = express();
+
+    this.app.use(express.json());
+    this.app.use("/api/health", healthRouter);
+    this.app.use(
+      "/api/docs",
+      swaggerUi.serve,
+      swaggerUi.setup(swaggerSpec)
+    );
+  }
+
+  async start(): Promise<void> {
+    const userRouter = await createUserRouter();
+
+    this.app.use("/api/users", userRouter);
+
+
+    return new Promise(resolve => {
+      this.httpServer = this.app.listen(config.server.port, () => {
+        const { port } = this.httpServer?.address() as AddressInfo;
+        this.logger.info(
+          `App is ready and listening on http://localhost:${port} 🚀`
+        );
+        resolve();
+      });
+    });
+  }
+
+  async stop(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (!this.httpServer) {
+        resolve();
+        return;
+      }
+
+      this.httpServer.close(error => {
+        if (error) {
+          reject(error);
+          return;
+        }
+        resolve();
+      });
+    });
+  }
+
+  getHttpServer(): http.Server {
+    if (!this.httpServer) {
+      throw new Error("Server has not been started yet");
+    }
+
+    return this.httpServer;
+  }
+}
