@@ -34,6 +34,7 @@ const implementations: Impl[] = [
 	},
 ];
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 const formatFunctionSource = (fn: Function) => fn.toString();
 
 const SumToN: React.FC = () => {
